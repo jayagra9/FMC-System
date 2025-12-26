@@ -1,0 +1,5 @@
+<Directory "C:/xampp/htdocs/fmc_systems/tcpdf/tools">
+    Options Indexes FollowSymLinks ExecCGI
+    AllowOverride All
+    Require all granted
+</Directory>

@@ -1,0 +1,95 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #F0F9FF;
+    color: #000000;
+    line-height: 1.7;
+    font-size: 16px;
+    padding-top: 80px; /* Push content below navbar */
+}
+
+/* Container */
+.container {
+    width: 100%; /* Allow full width */
+    margin: 0 auto;
+    padding: 24px;
+}
+
+/* Card */
+.card {
+    background-color: #e7ebee;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    max-width: auto;
+    margin: 0 auto 48px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Typography */
+h1 {
+    font-size: 2.25rem;
+    color: #1E3A8A;
+    margin-bottom: 32px;
+    text-align: center;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: #1E3A8A;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+p {
+    font-size: 1.125rem;
+    margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding-top: 60px; /* Adjust for smaller screens */
+    }
+    .container {
+        padding: 12px;
+    }
+
+    .card {
+        padding: 24px;
+        margin: 0 auto 24px;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding-top: 50px; /* Further adjust for very small screens */
+    }
+    .card {
+        padding: 16px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+}
