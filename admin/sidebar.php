@@ -3,6 +3,12 @@
 ?>
 
 <style>
+    .body {
+        margin: 0;
+        font-family: Arial;
+        background: #f5f7fa;
+    }
+
     .sidebar {
         width: 250px;
         background: #1a2b47;
@@ -14,16 +20,10 @@
         color: white;
         display: flex;
         flex-direction: column;
-        z-index: 1000;
     }
 
     .sidebar-content {
         flex: 1;
-    }
-
-    .sidebar h2 {
-        text-align: center;
-        margin-bottom: 20px;
     }
 
     .sidebar a {
@@ -44,26 +44,26 @@
         padding: 14px;
         color: white;
         text-decoration: none;
+        font-size: 16px;
         background: #c1121f;
         text-align: center;
         margin: 10px;
+        margin-top: auto;
+        width: calc(100% - 20px);
         border-radius: 4px;
+        border: none;
+        cursor: pointer;
         font-weight: bold;
     }
 
     .logout-btn:hover {
         background: #a00c1a;
     }
-
-    .main {
-        margin-left: 260px;
-        padding: 20px;
-    }
 </style>
 
 <div class="sidebar">
     <div class="sidebar-content">
-        <h2>FMC Admin</h2>
+        <h2 style="text-align:center;">FMC Admin</h2>
 
         <a href="admindashboard.php">Dashboard</a>
         <a href="register_user.php">Register User</a>
@@ -72,9 +72,7 @@
         <a href="admin_distress_vessels.php">Distress Alerts</a>
         <a href="usermanagement.php">User Management</a>
         <a href="activitylogs.php">Activity Logs</a>
-        <a href="admin_service.php">Services</a>
         <a href="admin_profile.php">Settings</a>
     </div>
-
     <a href="logout.php" class="logout-btn">Logout</a>
 </div>

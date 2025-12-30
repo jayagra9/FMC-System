@@ -313,7 +313,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
             <a href="silent_vessel.php"><i class="fas fa-radio"></i> Silent Vessels</a>
             <a href="distress_vessel.php"><i class="fas fa-sos"></i> Distress Vessels</a>
             <a href="service.php"><i class="fas fa-tools"></i> Service</a>
-            <a href="payments.php"><i class="fas fa-credit-card"></i> Payments</a>
         </div>
 
         <div class="navbar-right">
@@ -385,17 +384,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 </div>
                 <h3>Service</h3>
                 <p>Access services and support for the fisheries system.</p>
-                <div class="card-arrow">
-                    View Details <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
-
-            <a href="payments.php" class="card-item">
-                <div class="card-icon">
-                    <i class="fas fa-credit-card"></i>
-                </div>
-                <h3>Payments</h3>
-                <p>Manage vessel payments and financial transactions.</p>
                 <div class="card-arrow">
                     View Details <i class="fas fa-arrow-right"></i>
                 </div>

@@ -2,7 +2,7 @@
 require_once 'config.php';
 
 if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
-    header("Location: login.php");
+    header('Location: login.php');
     exit();
 }
 
@@ -12,26 +12,29 @@ $error = null;
 
 try {
     $sql = "
-        SELECT sv.*, 
-               uc.username AS created_by_username, 
-               uu.username AS updated_by_username
-        FROM silent_vessels sv
-        LEFT JOIN users uc ON sv.created_by = uc.id
-        LEFT JOIN users uu ON sv.updated_by = uu.id
+        SELECT s.*, 
+               u.username AS created_by_username
+        FROM services s
+        LEFT JOIN users u ON s.created_by = u.id
         WHERE 1=1
     ";
 
     if ($search !== '') {
         $sql .= " AND (
-            sv.vessel_name LIKE :search
-            OR sv.owner_name LIKE :search
-            OR sv.owner_contact_number LIKE :search
-            OR uc.username LIKE :search
-            OR uu.username LIKE :search
+            s.iom_zms LIKE :search
+            OR s.imul_no LIKE :search
+            OR s.bt_sn LIKE :search
+            OR s.home_port LIKE :search
+            OR s.contact_number LIKE :search
+            OR s.current_status LIKE :search
+            OR s.feedback_to_call LIKE :search
+            OR s.comments LIKE :search
+            OR s.installation_checklist LIKE :search
+            OR u.username LIKE :search
         )";
     }
 
-    $sql .= " ORDER BY sv.created_at DESC LIMIT 200";
+    $sql .= " ORDER BY s.created_at DESC LIMIT 200";
 
     $stmt = $pdo->prepare($sql);
     if ($search !== '') {
@@ -49,7 +52,7 @@ function fetch_audits($pdo, $id) {
         $stmt = $pdo->prepare("
             SELECT changed_at, action, changed_by, changes
             FROM activity_audit
-            WHERE table_name = 'silent_vessels'
+            WHERE table_name = 'services'
               AND record_id = ?
             ORDER BY changed_at DESC
             LIMIT 10
@@ -61,10 +64,11 @@ function fetch_audits($pdo, $id) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin — Silent Vessel Alerts</title>
+    <title>Admin — Service Logs</title>
     <style>
         body { margin:0; font-family:Arial; background:#f5f7fa; }
         .main { margin-left:260px; padding:20px; }
@@ -84,7 +88,7 @@ function fetch_audits($pdo, $id) {
         }
         .search-box input[type="text"] {
             padding: 10px;
-            width: 250px;
+            width: 300px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
@@ -134,9 +138,9 @@ function fetch_audits($pdo, $id) {
 
 <div class="main">
     <div class="topbar">
-        <h1>Silent Vessel Alerts</h1>
+        <h1>Service Records</h1>
         <form class="search-box" method="GET">
-            <input type="text" name="search" value="<?= htmlspecialchars($search) ?>" placeholder="Search vessel, owner, contact, user...">
+            <input type="text" name="search" value="<?= htmlspecialchars($search) ?>" placeholder="Search services...">
             <button type="submit">Search</button>
         </form>
     </div>
@@ -146,24 +150,18 @@ function fetch_audits($pdo, $id) {
     <?php endif; ?>
 
     <?php if (empty($rows)): ?>
-        <p>No records found.</p>
+        <p>No service records found.</p>
     <?php endif; ?>
 
     <?php foreach ($rows as $r): ?>
         <div class="card">
             <div class="meta"><strong>ID:</strong> <?= htmlspecialchars($r['id']) ?></div>
-            <div class="meta"><strong>Vessel Name:</strong> <?= htmlspecialchars($r['vessel_name'] ?? 'N/A') ?></div>
-            <div class="meta"><strong>Owner:</strong> <?= htmlspecialchars($r['owner_name'] ?? 'N/A') ?></div>
-            <div class="meta"><strong>Contact Number:</strong> <?= htmlspecialchars($r['owner_contact_number'] ?? 'N/A') ?></div>
-            <div class="meta"><strong>Harbour:</strong> <?= htmlspecialchars($r['relevant_harbour'] ?? 'N/A') ?></div>
-            <div class="meta">
-                <strong>Created:</strong> <?= htmlspecialchars($r['created_at']) ?> by <?= htmlspecialchars($r['created_by_username'] ?? '') ?>
-            </div>
-            <?php if (!empty($r['updated_at'])): ?>
-                <div class="meta">
-                    <strong>Updated:</strong> <?= htmlspecialchars($r['updated_at']) ?> by <?= htmlspecialchars($r['updated_by_username'] ?? '') ?>
-                </div>
-            <?php endif; ?>
+            <div class="meta"><strong>IOM/ZMS:</strong> <?= htmlspecialchars($r['iom_zms']) ?></div>
+            <div class="meta"><strong>IMUL No:</strong> <?= htmlspecialchars($r['imul_no']) ?></div>
+            <div class="meta"><strong>BT SN:</strong> <?= htmlspecialchars($r['bt_sn']) ?></div>
+            <div class="meta"><strong>Home Port:</strong> <?= htmlspecialchars($r['home_port']) ?></div>
+            <div class="meta"><strong>Contact:</strong> <?= htmlspecialchars($r['contact_number']) ?></div>
+            <div class="meta"><strong>Created:</strong> <?= htmlspecialchars($r['created_at']) ?> by <?= htmlspecialchars($r['created_by_username']) ?></div>
 
             <?php $audits = fetch_audits($pdo, $r['id']); ?>
             <?php if ($audits): ?>

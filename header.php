@@ -47,7 +47,6 @@ $username = $_SESSION['username'] ?? 'User';
             <li><a href="silent_vessel.php"><i class="fas fa-wifi-slash"></i> Silent Vessels</a></li>
             <li><a href="distress_vessel.php"><i class="fas fa-exclamation-circle"></i> Distress</a></li>
             <li><a href="service.php"><i class="fas fa-tools"></i> Service Pending</a></li>
-            <li><a href="payments.php"><i class="fas fa-credit-card"></i> Payments</a></li>
             <li><a href="profile.php"><i class="fas fa-user"></i> Profile</a></li>
         <?php endif; ?>
 

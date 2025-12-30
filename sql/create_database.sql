@@ -15,41 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
     profile_picture VARCHAR(255)
 );
 
--- Vessel Owners Table
-CREATE TABLE IF NOT EXISTS vessel_owners (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    owner_name VARCHAR(100) NOT NULL,
-    company_name VARCHAR(100),
-    email VARCHAR(100),
-    phone VARCHAR(20),
-    address VARCHAR(255),
-    city VARCHAR(50),
-    country VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
 
--- Vessels Table
-CREATE TABLE IF NOT EXISTS vessels (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    imo_number VARCHAR(50) UNIQUE,
-    vessel_name VARCHAR(100) NOT NULL,
-    vessel_type VARCHAR(50),
-    owner_id INT,
-    call_sign VARCHAR(20),
-    mmsi VARCHAR(20),
-    flag_state VARCHAR(50),
-    length_overall DECIMAL(10, 2),
-    beam DECIMAL(10, 2),
-    gross_tonnage DECIMAL(10, 2),
-    contact_number VARCHAR(20),
-    last_known_position VARCHAR(100),
-    last_position_update DATETIME,
-    status ENUM('active', 'inactive', 'under_maintenance') DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (owner_id) REFERENCES vessel_owners(id)
-);
 
 -- Border Crossing Alerts Table
 CREATE TABLE IF NOT EXISTS border_crossing_alerts (
@@ -146,21 +112,6 @@ CREATE TABLE IF NOT EXISTS activity_logs (
     ip_address VARCHAR(45),
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
--- Reports Table
-CREATE TABLE IF NOT EXISTS reports (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(200) NOT NULL,
-    report_type VARCHAR(50),
-    generated_by INT,
-    generated_date DATETIME,
-    start_date DATE,
-    end_date DATE,
-    content LONGTEXT,
-    file_path VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (generated_by) REFERENCES users(id)
 );
 
 -- Settings Table
@@ -265,3 +216,34 @@ ADD COLUMN created_by INT NULL,
 ADD COLUMN created_at DATETIME NULL,
 ADD COLUMN updated_by INT NULL,
 ADD COLUMN updated_at DATETIME NULL;
+
+-- Create audit table for border crossings edits
+CREATE TABLE IF NOT EXISTS `border_crossings_audit` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `border_crossing_id` INT NOT NULL,
+  `changed_by` INT DEFAULT NULL,
+  `changed_at` DATETIME NOT NULL,
+  `action` VARCHAR(32) NOT NULL,
+  `changes` TEXT,
+  PRIMARY KEY (`id`),
+  INDEX `idx_border_crossing` (`border_crossing_id`),
+  INDEX `idx_changed_by` (`changed_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- Central activity audit table to track creates/updates/deletes across tables
+CREATE TABLE IF NOT EXISTS `activity_audit` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `table_name` VARCHAR(128) NOT NULL,
+  `record_id` BIGINT NOT NULL,
+  `action` ENUM('create','update','delete') NOT NULL,
+  `changed_by` INT DEFAULT NULL,
+  `changed_at` DATETIME NOT NULL,
+  `changes` JSON DEFAULT NULL,
+  `ip_address` VARCHAR(45) DEFAULT NULL,
+  `user_agent` TEXT DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX (`table_name`),
+  INDEX (`record_id`),
+  INDEX (`changed_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

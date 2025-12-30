@@ -235,9 +235,6 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
     <div class="container">
         <div class="card">
             <h1>DISTRESS VESSELS</h1>
-            <div class="action-buttons-container" style="justify-content: flex-end; margin-bottom: 20px;">
-                <a href="add_distress_vessel.php" class="btn btn-primary">Add New</a>
-            </div>
             <div class="controls-container">
                 <div class="search-container">
                     <label for="searchInput">Search:</label>
@@ -273,6 +270,9 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
                     <button class="btn btn-primary" onclick="clearFilters()">Clear Filters</button>
                     <button class="btn btn-primary" onclick="clearFilters()">Remove Filters</button>
                 </div>
+                <div class="action-buttons-container" style="justify-content: flex-end; margin-bottom: 20px;">
+                    <a href="add_distress_vessel.php" class="btn btn-primary" style="width:200px; text-align:center;">Add New</a>
+                </div>
                 <div class="export-container">
                     <label for="exportType" class="font-medium">Export As:</label>
                     <select id="exportType" name="export_type">
@@ -283,10 +283,8 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
                     </select>
                     <button onclick="exportTable()">Export</button>
                 </div>
-                <!-- New Generate Report Button -->
-                <div class="action-buttons-container">
-                    <a href="distress_vessel_report.php?search=<?php echo urlencode($search_query); ?>&date_field=<?php echo urlencode($date_field); ?>&date_from=<?php echo urlencode($date_from); ?>&date_to=<?php echo urlencode($date_to); ?>&status=<?php echo urlencode($status); ?>" class="btn btn-primary">Generate Report</a>
-                </div>
+                
+              
             </div>
             <?php if ($distress_vessels): ?>
                 <div class="table-container">

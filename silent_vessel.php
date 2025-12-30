@@ -143,6 +143,9 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
         .btn-primary {
             background-color: #2DD4BF;
             color: white;
+            min-width: 200px;
+            text-align: center;
+            display: inline-block;
         }
         .btn-secondary {
             background-color: #1E3A8A;
@@ -178,11 +181,42 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 14px;
         }
-        .first-notice-owner { background-color: #6adda2ff; }      /* Light green */
-        .first-notice-habour { background-color: #fee2e2; }     /* Light red */
-        .first-notice-wrong { background-color: #fef9c3; }      /* Light yellow */
-        .first-notice-noresponse { background-color: #e0e7ff; } /* Light blue */
-        .first-notice-notworking { background-color: #f3e8ff; } /* Light purple */
+        .first-notice-owner { background-color: #6adda2ff; }
+        .first-notice-habour { background-color: #fee2e2; }
+        .first-notice-wrong { background-color: #fef9c3; }
+        .first-notice-noresponse { background-color: #e0e7ff; }
+        .first-notice-notworking { background-color: #f3e8ff; }
+        .export-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            justify-content: flex-end;
+        }
+        .export-container select {
+            padding: 8px;
+            border: 1px solid #D1D5DB;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 14px;
+            min-width: 150px;
+        }
+        .export-container select:focus {
+            outline: none;
+            border-color: #2DD4BF;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.3);
+        }
+        .export-container button {
+            background-color: #1E3A8A;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .export-container button:hover {
+            background-color: #1E40AF;
+        }
     </style>
 </head>
 <body>
@@ -231,9 +265,18 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
                     <button class="btn btn-primary" onclick="clearFilters()">Clear Filters</button>
                     <button class="btn btn-primary" onclick="clearFilters()">Remove Filters</button>
                 </div>
-                <div class="action-buttons-container">
-                    <a href="add_silent_vessel.php" class="btn btn-primary">Add New</a>
-                    <a href="?export=excel&search=<?php echo htmlspecialchars($search_query); ?>&date_field=<?php echo htmlspecialchars($date_field); ?>&date_from=<?php echo htmlspecialchars($date_from); ?>&date_to=<?php echo htmlspecialchars($date_to); ?>&owner_informed=<?php echo htmlspecialchars($owner_informed); ?>&sms_to_owner=<?php echo htmlspecialchars($sms_to_owner); ?>" class="btn btn-secondary">Export to Excel</a>
+                <div class="action-buttons-container" style="justify-content: flex-end; margin-bottom: 20px;">
+                    <a href="add_silent_vessels.php" class="btn btn-primary" style="width:200px; text-align:center;">Add New</a>
+                </div>
+                <div class="export-container">
+                    <label for="exportType" class="font-medium">Export As:</label>
+                    <select id="exportType" name="export_type">
+                        <option value="">Select Export Type</option>
+                        <option value="excel">Excel</option>
+                        <option value="pdf">PDF</option>
+                        <option value="image">Image</option>
+                    </select>
+                    <button onclick="exportTable()">Export</button>
                 </div>
             </div>
             <?php if ($silent_vessels): ?>
