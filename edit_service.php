@@ -16,7 +16,7 @@ if ($id > 0) {
 }
 
 if (!$service) {
-    echo "<script>alert('Record not found');location='services.php';</script>";
+    echo "<script>alert('Record not found');location='service.php';</script>";
     exit();
 }
 
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save'])) {
         $id
     ]);
 
-    echo "<script>alert('Service record updated successfully');location='services.php';</script>";
+    echo "<script>alert('Service record updated successfully');location='service.php';</script>";
     exit();
 }
 

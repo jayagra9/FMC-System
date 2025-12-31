@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user_id']
     ]);
 
-    echo "<script>alert('Service record added successfully'); window.location.href = 'services.php';</script>";
+    echo "<script>alert('Service record added successfully'); window.location.href = 'service.php';</script>";
     exit();
 }
 ?>

@@ -96,6 +96,9 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
     <title>Silent Vessel - FMC Fisheries</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="nav.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <style>
         .table-container {
             overflow-x: auto;
@@ -262,11 +265,10 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
                         <option value="Not Sent" <?php echo $sms_to_owner === 'Not Sent' ? 'selected' : ''; ?>>Not Sent</option>
                         <option value="Failed" <?php echo $sms_to_owner === 'Failed' ? 'selected' : ''; ?>>Failed</option>
                     </select>
-                    <button class="btn btn-primary" onclick="clearFilters()">Clear Filters</button>
                     <button class="btn btn-primary" onclick="clearFilters()">Remove Filters</button>
                 </div>
                 <div class="action-buttons-container" style="justify-content: flex-end; margin-bottom: 20px;">
-                    <a href="add_silent_vessels.php" class="btn btn-primary" style="width:200px; text-align:center;">Add New</a>
+                    <a href="add_silent_vessel.php" class="btn btn-primary" style="width:200px; text-align:center;">Add New</a>
                 </div>
                 <div class="export-container">
                     <label for="exportType" class="font-medium">Export As:</label>
@@ -347,6 +349,65 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
             }
             window.location.href = url;
         }
+
+function exportTable() {
+    const exportType = document.getElementById('exportType').value;
+    if (!exportType) {
+        alert('Please select an export type');
+        return;
+    }
+
+    /* ---------- EXCEL (SERVER SIDE) ---------- */
+    if (exportType === 'excel') {
+        const params = new URLSearchParams(window.location.search);
+        params.set('export', 'excel');
+        window.location.href = '?' + params.toString();
+        return;
+    }
+
+    /* ---------- IMAGE ---------- */
+    if (exportType === 'image') {
+        html2canvas(document.querySelector('.data-table'), { scale: 2 })
+        .then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'silent_vessels_' + new Date().toISOString().slice(0,10) + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+        return;
+    }
+
+    if (exportType === 'pdf') {
+        const { jsPDF } = window.jspdf;
+        html2canvas(document.querySelector('.data-table'), { scale: 1 })
+        .then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('landscape', 'mm', 'a4');
+
+            const imgWidth = 280;
+            const pageHeight = 210;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+
+            let heightLeft = imgHeight;
+            let position = 10;
+
+            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft > 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            pdf.save('silent_vessels_' + new Date().toISOString().slice(0,10) + '.pdf');
+        });
+        return;
+    }
+}
+
+
 
         function clearFilters() {
             document.getElementById('searchInput').value = '';

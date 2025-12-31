@@ -52,7 +52,12 @@ function user_field(array $user, array $names, $default = '') {
     return $default;
 }
 
-// Resolve commonly-used fields with fallbacks
+if (!$user || !is_array($user)) {
+    session_destroy();
+    header("Location: login.php");
+    exit();
+}
+
 $display_name = user_field($user, ['full_name','fullname','name'], 'User');
 $display_username = user_field($user, ['username','user_name','user'],'user');
 $display_email = user_field($user, ['email','user_email','email_address'],'');
